@@ -1,46 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI
-;
+using UnityEngine.AI;
 
-public class moveto : MonoBehaviour
-{  
-    public GameObject target;
+public class MoveTo : MonoBehaviour
+{
     public NavMeshAgent agent;
     public Animator animator;
     public float stopDistance = 0.1f;
-    public List<GameObject> targets;
-    public int targetIndex = 0; 
+    public List<GameObject> targets = new List<GameObject>();
+    public int targetIndex = 0;
 
+    private GameObject target;
 
     // Start is called before the first frame update
     void Start()
     {
-        animator = GetComponent<Animator>(); 
+        animator = GetComponent<Animator>();
+
+        // Если список целей не пустой, устанавливаем первую цель
+        if (targets.Count > 0)
+        {
+            target = targets[targetIndex];
+            agent.SetDestination(target.transform.position);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        agent.SetDestination(target.transform.position);
-        
-        if(Vector3.Distance(transform.position, target.transform.position) < stopDistance)
+        if (target != null)
         {
-            animator.SetBool("isrunning", false);
-            targetIndex++; 
-            
-            if(targetIndex >= targets.Count)
-            {
-                targetIndex = 0;
-            }
-            target = targets[targetIndex]; 
+            agent.SetDestination(target.transform.position);
 
+            // Проверка расстояния до цели
+            if (Vector3.Distance(transform.position, target.transform.position) < stopDistance)
+            {
+                animator.SetBool("isRunning", false);  // Персонаж стоит
+
+                targetIndex++;
+                if (targetIndex >= targets.Count)
+                {
+                    targetIndex = 0;
+                }
+                target = targets[targetIndex];
+            }
+            else
+            {
+                animator.SetBool("isRunning", true);  // Персонаж идет
+            }
         }
         else
         {
-            animator.SetBool("isRunning", true);
+            animator.SetBool("isRunning", false);  // Если цели нет, персонаж стоит
         }
-       
     }
 }
