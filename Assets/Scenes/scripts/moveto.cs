@@ -31,11 +31,11 @@ public class MoveTo : MonoBehaviour
     {
         if (target != null)
         {
-            agent.SetDestination(target.transform.position);
+            float distance = Vector3.Distance(transform.position, target.transform.position);
 
-            // Проверка расстояния до цели
-            if (Vector3.Distance(transform.position, target.transform.position) < stopDistance)
+            if (distance < stopDistance)
             {
+                agent.isStopped = true;  // Останавливаем NavMeshAgent
                 animator.SetBool("isRunning", false);  // Персонаж стоит
 
                 targetIndex++;
@@ -47,6 +47,8 @@ public class MoveTo : MonoBehaviour
             }
             else
             {
+                agent.isStopped = false;  // Продолжаем движение
+                agent.SetDestination(target.transform.position);
                 animator.SetBool("isRunning", true);  // Персонаж идет
             }
         }
