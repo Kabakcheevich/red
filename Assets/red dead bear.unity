@@ -2557,10 +2557,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8871697552133391213, guid: 1216099de1838824bbd4d4b016f12108, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 045077fab07ba33469397d81c7987ca2, type: 2}
     - target: {fileID: -8747311141535994252, guid: 1216099de1838824bbd4d4b016f12108, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 14df2647a36d25946b09927b20269453, type: 2}
+    - target: {fileID: -8747311141535994252, guid: 1216099de1838824bbd4d4b016f12108, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8f8538a507be84d439605bec298c8cf4, type: 2}
     - target: {fileID: -8679921383154817045, guid: 1216099de1838824bbd4d4b016f12108, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.84
@@ -2601,10 +2609,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8678395800261720109, guid: 1216099de1838824bbd4d4b016f12108, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 045077fab07ba33469397d81c7987ca2, type: 2}
+    - target: {fileID: -7875427933290503318, guid: 1216099de1838824bbd4d4b016f12108, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8f8538a507be84d439605bec298c8cf4, type: 2}
+    - target: {fileID: -353891054978913556, guid: 1216099de1838824bbd4d4b016f12108, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 045077fab07ba33469397d81c7987ca2, type: 2}
     - target: {fileID: 919132149155446097, guid: 1216099de1838824bbd4d4b016f12108, type: 3}
       propertyPath: m_Name
       value: Desert_Village_House_2
       objectReference: {fileID: 0}
+    - target: {fileID: 2262329792514422955, guid: 1216099de1838824bbd4d4b016f12108, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8f8538a507be84d439605bec298c8cf4, type: 2}
+    - target: {fileID: 5257866334398376682, guid: 1216099de1838824bbd4d4b016f12108, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8f8538a507be84d439605bec298c8cf4, type: 2}
+    - target: {fileID: 6927786955598028802, guid: 1216099de1838824bbd4d4b016f12108, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9f4b8682d8f68884db627e331a14ea69, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
