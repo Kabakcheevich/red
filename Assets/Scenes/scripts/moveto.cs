@@ -14,19 +14,14 @@ public class MoveTo : MonoBehaviour
     public string bearTag = "Bear"; // Тег медведя
     public Button moveButton; // Ссылка на кнопку в пользовательском интерфейсе
     public Button partyButton; // Ссылка на кнопку "Let's party"
-    public Button smokeButton; // Ссылка на кнопку "Smoke"
     public float bearStopDistance = 15.0f; // Дистанция остановки для медведя
     public float stoneStopDistance = 4.0f; // Дистанция остановки для камня
-    public float chairStopDistance = 1.0f; // Дистанция остановки для стула
-    public string chairTag = "Chair"; // Тег стула
 
     private GameObject target;
     private bool isShooting = false; // Флаг, показывающий, что герой собирается стрелять
     private bool isMoving = false; // Флаг, показывающий, что герой движется
     private bool isPartying = false; // Флаг, показывающий, что герой собирается танцевать
-    private bool isSmoking = false; // Флаг, показывающий, что герой собирается курить
     private int partyTargetIndex; // Индекс цели для танца в списке targets
-    private int chairTargetIndex; // Индекс стула в списке targets
 
     void Start()
     {
@@ -34,7 +29,7 @@ public class MoveTo : MonoBehaviour
 
         // Останавливаем агента при старте
         agent.isStopped = true;
-        animator.SetTrigger("Idle");
+        animator.SetBool("isRunning", false);
 
         if (targets.Count > 0)
         {
@@ -53,25 +48,8 @@ public class MoveTo : MonoBehaviour
             partyButton.onClick.AddListener(StartParty);
         }
 
-        // Привязываем метод StartSmoking к событию нажатия на кнопку
-        if (smokeButton != null)
-        {
-            smokeButton.onClick.AddListener(StartSmoking);
-        }
-
         // Предполагаем, что камень добавлен последним в список targets
         partyTargetIndex = targets.Count - 1;
-
-        // Найдем индекс стула в списке targets
-        for (int i = 0; i < targets.Count; i++)
-        {
-            if (targets[i].CompareTag(chairTag))
-            {
-                chairTargetIndex = i;
-                Debug.Log("Chair found at index: " + chairTargetIndex);
-                break;
-            }
-        }
     }
 
     void Update()
@@ -84,9 +62,9 @@ public class MoveTo : MonoBehaviour
         {
             PartyMove();
         }
-        else if (isSmoking && targets[chairTargetIndex] != null)
+        else
         {
-            SmokeMove();
+            animator.SetBool("isRunning", false);
         }
     }
 
@@ -102,10 +80,11 @@ public class MoveTo : MonoBehaviour
         if (distance < agent.stoppingDistance)
         {
             agent.isStopped = true;
-            animator.SetTrigger("Idle");
+            animator.SetBool("isRunning", false);
 
             if (target.CompareTag(bearTag) && !isShooting)
             {
+                CameraSwitcher.Instance.SwitchToBearKillCamera(); // Переключаемся на камеру убийства медведя
                 StartCoroutine(ShootAfterDelay());
             }
             else
@@ -124,7 +103,8 @@ public class MoveTo : MonoBehaviour
         {
             agent.isStopped = false;
             agent.SetDestination(target.transform.position);
-            animator.SetTrigger("Run");
+            animator.SetBool("isRunning", true);
+            CameraSwitcher.Instance.SwitchToMainCamera(); // Переключаемся на основную камеру при движении
         }
     }
 
@@ -137,70 +117,42 @@ public class MoveTo : MonoBehaviour
         if (distance < agent.stoppingDistance)
         {
             agent.isStopped = true;
+            animator.SetBool("isRunning", false);
             animator.SetTrigger("Dance");
+            CameraSwitcher.Instance.SwitchToDanceCamera(); // Переключаемся на камеру танца
             isPartying = false; // Завершаем танец
         }
         else
         {
             agent.isStopped = false;
             agent.SetDestination(partyTarget.transform.position);
-            animator.SetTrigger("Run");
-        }
-    }
-
-    void SmokeMove()
-    {
-        agent.stoppingDistance = chairStopDistance;
-        GameObject chairTarget = targets[chairTargetIndex];
-        float distance = Vector3.Distance(transform.position, chairTarget.transform.position);
-
-        if (distance < agent.stoppingDistance)
-        {
-            agent.isStopped = true;
-            animator.SetTrigger("Sit");
-            StartCoroutine(StartSmokingAfterSit());
-            isSmoking = false; // Завершаем движение к стулу
-        }
-        else
-        {
-            agent.isStopped = false;
-            agent.SetDestination(chairTarget.transform.position);
-            Debug.Log("Moving to chair: " + chairTarget.name);
-            animator.SetTrigger("Run");
+            animator.SetBool("isRunning", true);
         }
     }
 
     void StartMovement()
     {
-        if (!isMoving && !isShooting && !isPartying && !isSmoking)
+        if (!isMoving && !isShooting && !isPartying)
         {
             isMoving = true;
             agent.isStopped = false;
+            target = targets[targetIndex]; // Убедимся, что цель установлена правильно
             agent.SetDestination(target.transform.position);
-            animator.SetTrigger("Run");
+            animator.SetBool("isRunning", true);
+            CameraSwitcher.Instance.SwitchToMainCamera(); // Переключаемся на основную камеру
         }
     }
 
     void StartParty()
     {
-        if (!isPartying && !isMoving && !isShooting && !isSmoking)
+        if (!isPartying && !isMoving && !isShooting)
         {
             isPartying = true;
             agent.isStopped = false;
-            agent.SetDestination(targets[partyTargetIndex].transform.position);
-            animator.SetTrigger("Run");
-        }
-    }
-
-    void StartSmoking()
-    {
-        if (!isSmoking && !isMoving && !isShooting && !isPartying)
-        {
-            isSmoking = true;
-            agent.isStopped = false;
-            agent.SetDestination(targets[chairTargetIndex].transform.position);
-            Debug.Log("Heading to chair at index: " + chairTargetIndex);
-            animator.SetTrigger("Run");
+            target = targets[partyTargetIndex]; // Устанавливаем цель для танца
+            agent.SetDestination(target.transform.position);
+            animator.SetBool("isRunning", true);
+            CameraSwitcher.Instance.SwitchToMainCamera(); // Переключаемся на основную камеру
         }
     }
 
@@ -212,11 +164,5 @@ public class MoveTo : MonoBehaviour
         animator.SetTrigger("Idle"); // После задержки переходим в состояние покоя
         isShooting = false;
         isMoving = false; // Завершаем стрельбу и движение
-    }
-
-    private IEnumerator StartSmokingAfterSit()
-    {
-        yield return new WaitForSeconds(1.0f); // Ждем, пока персонаж сядет
-        animator.SetTrigger("Smoke");
     }
 }
