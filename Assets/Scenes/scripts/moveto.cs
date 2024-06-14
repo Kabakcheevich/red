@@ -100,6 +100,7 @@ public class MoveTo : MonoBehaviour
 
             if (target.CompareTag(bearTag) && !isShooting)
             {
+                CameraSwitcher.Instance.SwitchToBearKillCamera(); // Переключаемся на камеру убийства медведя
                 StartCoroutine(ShootAfterDelay());
             }
             else
@@ -119,6 +120,7 @@ public class MoveTo : MonoBehaviour
             agent.isStopped = false;
             agent.SetDestination(target.transform.position);
             animator.SetBool("isRunning", true);
+            CameraSwitcher.Instance.SwitchToMainCamera(); // Переключаемся на основную камеру при движении
         }
     }
 
@@ -133,6 +135,7 @@ public class MoveTo : MonoBehaviour
             agent.isStopped = true;
             animator.SetBool("isRunning", false);
             animator.SetTrigger("Dance");
+            CameraSwitcher.Instance.SwitchToDanceCamera(); // Переключаемся на камеру танца
             isPartying = false; // Завершаем танец
         }
         else
@@ -176,8 +179,10 @@ public class MoveTo : MonoBehaviour
         {
             isMoving = true;
             agent.isStopped = false;
+            target = targets[targetIndex]; // Убедимся, что цель установлена правильно
             agent.SetDestination(target.transform.position);
             animator.SetBool("isRunning", true);
+            CameraSwitcher.Instance.SwitchToMainCamera(); // Переключаемся на основную камеру
         }
         else if (isSmoking)
         {
@@ -192,8 +197,10 @@ public class MoveTo : MonoBehaviour
         {
             isPartying = true;
             agent.isStopped = false;
-            agent.SetDestination(targets[partyTargetIndex].transform.position);
+            target = targets[partyTargetIndex]; // Устанавливаем цель для танца
+            agent.SetDestination(target.transform.position);
             animator.SetBool("isRunning", true);
+            CameraSwitcher.Instance.SwitchToMainCamera(); // Переключаемся на основную камеру
         }
         else if (isSmoking)
         {

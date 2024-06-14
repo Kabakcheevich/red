@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Skull
   - Bear
+  - CinemachineTarget
+  - Chair
+  - Dance
   layers:
   - Default
   - TransparentFX
